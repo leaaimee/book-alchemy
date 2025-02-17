@@ -1,0 +1,13 @@
+# Generate requirements.txt by listing installed packages in the virtual environment
+import subprocess
+
+# Get the list of installed packages
+requirements = subprocess.run(["pip", "freeze"], capture_output=True, text=True)
+
+# Save to a requirements.txt file
+requirements_path = "/mnt/data/requirements.txt"
+with open(requirements_path, "w") as f:
+    f.write(requirements.stdout)
+
+# Return the file path for download
+requirements_path

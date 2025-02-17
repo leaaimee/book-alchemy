@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+  </head>
+  <body>
+  <body class="container mt-4">
+  <form action="/add_book" method="POST">
+    <label for="title">Book Title: </label>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="isbn">Isbn: </label>
+    <input type="text" id="isbn" name="isbn" required>
+
+    <label for="publication_year">Publication Year: </label>
+    <input type="text" id="publication_year" name="publication_year" required><br><br>
+
+    <label for="author">Author: </label>
+    <select id="author" name="author" required>
+    <option value="">Select an Author</option>
+      {% for author in authors %}
+        <option value="{{ author.name }}">{{ author.name }}</option>
+      {% endfor %}
+    </select><br><br>
+    <label for="rating">Rating:</label>
+  <select name="rating" id="rating">
+      <option value="">No Rating</option>
+      {% for i in range(1, 11) %}
+          <option value="{{ i }}">{{ i }}</option>
+      {% endfor %}
+  </select>
+
+  <input type="submit" value="Add Book">
+    {% if success %}
+    <p style="color: green; font-weight: bold;">📚 Book added successfully!</p>
+{% endif %}
+  </form>
+
+  </body>
+</html>
+

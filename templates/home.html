@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Library</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+
+    <h1>📚 Digital Library</h1>
+
+    <!-- Sorting Dropdown -->
+    <form action="/home" method="GET" class="mb-3">
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort" onchange="this.form.submit()">
+            <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title</option>
+            <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Author</option>
+        </select>
+    </form>
+
+    <!-- Search Bar -->
+    <form action="/home" method="GET" class="mb-3">
+        <label for="search">Search Books:</label>
+        <input type="text" id="search" name="search" value="{{ search_query }}">
+        <button type="submit">🔍 Search</button>
+    </form>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="alert alert-{{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <!-- Book List -->
+{% if books %}
+    <div class="list-group">
+        {% for book in books %}
+            <a href="{{ url_for('book_detail', book_id=book.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ book.title }}</strong> ({{ book.publication_year }}) by {{ book.author.name }}
+                    <br> ISBN: {{ book.isbn }}
+                </div>
+
+                <!-- Delete Button -->
+                <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">❌ Delete</button>
+                </form>
+            </a>
+        {% endfor %}
+
+                             <!-- Recommendations -->
+    <a href="{{ url_for('recommend') }}" class="btn btn-success mt-3">📚 Get a Recommendation</a>
+
+
+
+    </div>
+{% else %}
+    <p class="text-danger">No books found matching '{{ search_query }}'.</p>
+{% endif %}
+
+</body>
+</html>
