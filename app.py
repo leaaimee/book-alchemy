@@ -3,6 +3,12 @@ import os
 from data_models import db, Author, Book
 from datetime import datetime
 from flask import flash
+import openai
+from dotenv import load_dotenv
+
+
+load_dotenv()  # Load API key from .env file
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 print("✅ Starting Flask App...")
@@ -128,62 +134,78 @@ def book_detail(book_id):
     return render_template('book_detail.html', book=book)
 
 
+load_dotenv()  # Load API key from .env file
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
 @app.route('/recommend')
 def recommend():
     """ Generate a book recommendation based on the current library collection """
+    """ AI-Powered Book Recommendations """
     books = Book.query.all()
     book_titles = [book.title for book in books]
 
-    ai_recommendation = "If you liked " + ", ".join(book_titles[:3]) + ", you might enjoy 'The Cyberpunk Library'!"
+    prompt = f"I have read {', '.join(book_titles[:5])}. Based on these, recommend a book I would like."
+
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # Or use "gpt-3.5-turbo" for cheaper requests
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=50,
+        )
+        ai_recommendation = response["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        ai_recommendation = "Error fetching recommendation."
 
     return render_template('recommend.html', recommendation=ai_recommendation)
 
 
-with app.app_context():
-    db.create_all()
+# adding some books as starter pack
+# with app.app_context():
+#     db.create_all()
 
-from datetime import date
-
-def seed_data():
-    with app.app_context():
-        if Author.query.first():  # Avoid duplicate entries
-            print("✅ Database already populated!")
-            return
-
-        print("📚 Seeding database with legendary books...")
-
-        authors = {
-            "Douglas Adams": Author(name="Douglas Adams", birth_date=date(1952, 3, 11), date_of_death=date(2001, 5, 11)),
-            "Terry Pratchett": Author(name="Terry Pratchett", birth_date=date(1948, 4, 28), date_of_death=date(2015, 3, 12)),
-            "Philip K. Dick": Author(name="Philip K. Dick", birth_date=date(1928, 12, 16), date_of_death=date(1982, 3, 2)),
-            "Mary Shelley": Author(name="Mary Shelley", birth_date=date(1797, 8, 30), date_of_death=date(1851, 2, 1)),
-            "William Gibson": Author(name="William Gibson", birth_date=date(1948, 3, 17)),
-            "Chuck Palahniuk": Author(name="Chuck Palahniuk", birth_date=date(1962, 2, 21))
-        }
-
-        db.session.add_all(authors.values())
-        db.session.commit()
-
-        books = [
-            Book(title="The Hitchhiker's Guide to the Galaxy", isbn="9780345391803", publication_year=1979, author_id=authors["Douglas Adams"].id, rating=9),
-            Book(title="Dirk Gently's Holistic Detective Agency", isbn="9780671746728", publication_year=1987, author_id=authors["Douglas Adams"].id, rating=8),
-
-            Book(title="Good Omens", isbn="9780060853983", publication_year=1990, author_id=authors["Terry Pratchett"].id, rating=10),
-            Book(title="Hogfather", isbn="9780061059056", publication_year=1996, author_id=authors["Terry Pratchett"].id, rating=9),
-
-            Book(title="Do Androids Dream of Electric Sheep?", isbn="9780345404473", publication_year=1968, author_id=authors["Philip K. Dick"].id, rating=9),
-            Book(title="Ubik", isbn="9780547572294", publication_year=1969, author_id=authors["Philip K. Dick"].id, rating=8),
-
-            Book(title="Frankenstein", isbn="9780486282114", publication_year=1818, author_id=authors["Mary Shelley"].id, rating=10),
-
-            Book(title="Neuromancer", isbn="9780441569595", publication_year=1984, author_id=authors["William Gibson"].id, rating=9),
-
-            Book(title="Fight Club", isbn="9780393327342", publication_year=1996, author_id=authors["Chuck Palahniuk"].id, rating=10)
-        ]
-
-        db.session.add_all(books)
-        db.session.commit()
-        print("✅ Database seeded successfully!")
+# from datetime import date
+#
+# def seed_data():
+#     with app.app_context():
+#         if Author.query.first():  # Avoid duplicate entries
+#             print("✅ Database already populated!")
+#             return
+#
+#         print("📚 Seeding database with legendary books...")
+#
+#         authors = {
+#             "Douglas Adams": Author(name="Douglas Adams", birth_date=date(1952, 3, 11), date_of_death=date(2001, 5, 11)),
+#             "Terry Pratchett": Author(name="Terry Pratchett", birth_date=date(1948, 4, 28), date_of_death=date(2015, 3, 12)),
+#             "Philip K. Dick": Author(name="Philip K. Dick", birth_date=date(1928, 12, 16), date_of_death=date(1982, 3, 2)),
+#             "Mary Shelley": Author(name="Mary Shelley", birth_date=date(1797, 8, 30), date_of_death=date(1851, 2, 1)),
+#             "William Gibson": Author(name="William Gibson", birth_date=date(1948, 3, 17)),
+#             "Chuck Palahniuk": Author(name="Chuck Palahniuk", birth_date=date(1962, 2, 21))
+#         }
+#
+#         db.session.add_all(authors.values())
+#         db.session.commit()
+#
+#         books = [
+#             Book(title="The Hitchhiker's Guide to the Galaxy", isbn="9780345391803", publication_year=1979, author_id=authors["Douglas Adams"].id, rating=9),
+#             Book(title="Dirk Gently's Holistic Detective Agency", isbn="9780671746728", publication_year=1987, author_id=authors["Douglas Adams"].id, rating=8),
+#
+#             Book(title="Good Omens", isbn="9780060853983", publication_year=1990, author_id=authors["Terry Pratchett"].id, rating=10),
+#             Book(title="Hogfather", isbn="9780061059056", publication_year=1996, author_id=authors["Terry Pratchett"].id, rating=9),
+#
+#             Book(title="Do Androids Dream of Electric Sheep?", isbn="9780345404473", publication_year=1968, author_id=authors["Philip K. Dick"].id, rating=9),
+#             Book(title="Ubik", isbn="9780547572294", publication_year=1969, author_id=authors["Philip K. Dick"].id, rating=8),
+#
+#             Book(title="Frankenstein", isbn="9780486282114", publication_year=1818, author_id=authors["Mary Shelley"].id, rating=10),
+#
+#             Book(title="Neuromancer", isbn="9780441569595", publication_year=1984, author_id=authors["William Gibson"].id, rating=9),
+#
+#             Book(title="Fight Club", isbn="9780393327342", publication_year=1996, author_id=authors["Chuck Palahniuk"].id, rating=10)
+#         ]
+#
+#         db.session.add_all(books)
+#         db.session.commit()
+#         print("✅ Database seeded successfully!")
 
 # Run seeding
-seed_data()
+# seed_data()

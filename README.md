@@ -1,32 +1,38 @@
-📚 Book Alchemy
+**📚 Book Alchemy**
 
-A Flask-based digital library where you can add, search, and manage books with AI-powered recommendations.
-
-🚀 Features
-
-Add & delete books/authors
-Sort books by title or author
-Search for books
-AI-powered book recommendations
-Bootstrap-styled UI
-
-🛠️ Technologies Used
-
-Python & Flask
-SQLAlchemy with SQLite
-Jinja2 for templating
-Bootstrap for styling
+A Flask-based digital library where you can add, search, 
+and manage books—with optional AI-powered recommendations.
 
 
+🚀 **Features**
 
-🚀 Installation
+✔ Add & delete books and authors
+✔ Sort books by title or author
+✔ Search for books by keyword
+✔ View book details on individual pages
+✔ Bootstrap-styled UI for clean and modern design
+✔ (Optional) AI-powered recommendations
+
+
+**🛠️ Technologies Used**
+
+Python & Flask – Backend framework
+SQLAlchemy & SQLite – Database management
+Jinja2 – Dynamic templating
+Bootstrap – UI styling
+(Optional) OpenAI API – AI-powered recommendations (not enabled by default)
+
+
+
+🚀 **Installation**
 
 Clone the repository
 
 git clone <your-repo-url>
 cd book_alchemy
 
-Create and activate a virtual environment
+
+Create and Activate a Virtual Environment
 
 python -m venv .venv
 source .venv/bin/activate  # On macOS/Linux
@@ -34,14 +40,16 @@ source .venv/bin/activate  # On macOS/Linux
 
 
 Install dependencies
+
 pip install -r requirements.txt
 
 
 Run the Flask app
+
 flask run --debug
 
 
-📝 Usage
+📝 **Usage**
 
 Visit http://127.0.0.1:5000/home to browse and manage books.
 
@@ -50,10 +58,12 @@ Click on a book title to see details.
 Delete books directly from the homepage.
 Get AI-powered recommendations via the 'Get a Recommendation' button.
 
-📌 Notes
+📌 **Notes**
 
 Ensure the virtual environment is activated before running the app.
-AI recommendations currently use a basic rule-based suggestion; future updates will integrate an external API.
+AI recommendations are optional and currently use a placeholder rule-based suggestion. Future updates may integrate an external AI API.
+If using OpenAI’s API, update .env with OPENAI_API_KEY and add openai to requirements.txt.
 
-✨ Happy reading! 🚀
+
+**✨ Happy reading! 🚀**
 

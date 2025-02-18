@@ -6,6 +6,7 @@ from sqlalchemy import Integer
 db = SQLAlchemy()
 
 class Author(db.Model):
+    """ Represents an author in the digital library """
     __tablename__ = 'authors'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -19,6 +20,7 @@ class Author(db.Model):
         return f"Author(name: {self.name})"
 
 class Book(db.Model):
+    """ Model representing a book """
     __tablename__ = 'books'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
