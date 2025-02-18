@@ -3,12 +3,12 @@ import os
 from data_models import db, Author, Book
 from datetime import datetime
 from flask import flash
-import openai
-from dotenv import load_dotenv
+# import openai
+# from dotenv import load_dotenv
 
 
-load_dotenv()  # Load API key from .env file
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# load_dotenv()
+# openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 print("✅ Starting Flask App...")
@@ -134,30 +134,26 @@ def book_detail(book_id):
     return render_template('book_detail.html', book=book)
 
 
-load_dotenv()  # Load API key from .env file
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-
-@app.route('/recommend')
-def recommend():
-    """ Generate a book recommendation based on the current library collection """
-    """ AI-Powered Book Recommendations """
-    books = Book.query.all()
-    book_titles = [book.title for book in books]
-
-    prompt = f"I have read {', '.join(book_titles[:5])}. Based on these, recommend a book I would like."
-
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # Or use "gpt-3.5-turbo" for cheaper requests
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=50,
-        )
-        ai_recommendation = response["choices"][0]["message"]["content"].strip()
-    except Exception as e:
-        ai_recommendation = "Error fetching recommendation."
-
-    return render_template('recommend.html', recommendation=ai_recommendation)
+# @app.route('/recommend')
+# def recommend():
+#     """ Generate a book recommendation based on the current library collection """
+#     """ AI-Powered Book Recommendations """
+#     books = Book.query.all()
+#     book_titles = [book.title for book in books]
+#
+#     prompt = f"I have read {', '.join(book_titles[:5])}. Based on these, recommend a book I would like."
+#
+#     try:
+#         response = openai.ChatCompletion.create(
+#             model="gpt-4",  # Or use "gpt-3.5-turbo" for cheaper requests
+#             messages=[{"role": "user", "content": prompt}],
+#             max_tokens=50,
+#         )
+#         ai_recommendation = response["choices"][0]["message"]["content"].strip()
+#     except Exception as e:
+#         ai_recommendation = "Error fetching recommendation."
+#
+#     return render_template('recommend.html', recommendation=ai_recommendation)
 
 
 # adding some books as starter pack
@@ -209,3 +205,7 @@ def recommend():
 
 # Run seeding
 # seed_data()
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5002, debug=True)

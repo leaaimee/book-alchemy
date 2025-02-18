@@ -12,3 +12,4 @@ __pycache__/
 # Ignore IDE config (PyCharm, VS Code, etc.)
 .vscode/
 .idea/
+instance/
